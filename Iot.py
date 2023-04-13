@@ -2,13 +2,27 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import random as rnd
 
+from typing import Tuple, List
+
 # возвращает (длина_пути, [cписок вершин пути])
 # TODO: пока псевдорандом, поменять на рандом
-def createRoute(G: nx.Graph):
+# TODO: не обрабатывает, если пути нет
+def createRoute(G: nx.Graph) -> Tuple[int, List]:
     route_nodes = rnd.choices(list(G), k = 2)
     # алгоритм Дейкстры для взвешенного графа
     return nx.single_source_dijkstra(G, source= route_nodes[0], target = route_nodes[1])
 
+
+# получает граф, путь, сведения о машине (пока только скорость), время начала пути
+# TODO: возможно общая длина пути не нужна
+# TODO: сведения о машине должны приходить в виде объекта
+# TODO: сменить постоянную скорость на рандомную в диапазоне доступных для машины
+# TODO: сейчас время приходит строкой, изменить это
+# TODO: ФУНКЦИЯ ЕЩЁ НЕ ДОДЕЛАНА, ПОКА НЕ РАБОТАЕТ
+def modulateRoute(G: nx.Graph, route_tuple: Tuple[int, List],
+                  vehicle_speed: int, start_time: str):
+    (complete_length, route) = route_tuple
+    print(route)
 
 G = nx.Graph()  # создаём объект графа
 
@@ -36,4 +50,5 @@ G.add_weighted_edges_from(edges)
 # nx.draw(G, with_labels=True, font_weight='bold')
 # plt.show()
 
-print(createRoute(G))
+route = createRoute(G)
+modulateRoute(G, route, 60, "10:00")
