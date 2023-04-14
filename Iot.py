@@ -1,6 +1,7 @@
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt # type: ignore
 import networkx as nx
 import random as rnd
+import datetime as dt
 
 from typing import Tuple, List
 
@@ -17,12 +18,23 @@ def createRoute(G: nx.Graph) -> Tuple[int, List]:
 # TODO: возможно общая длина пути не нужна
 # TODO: сведения о машине должны приходить в виде объекта
 # TODO: сменить постоянную скорость на рандомную в диапазоне доступных для машины
-# TODO: сейчас время приходит строкой, изменить это
+# TODO: скорость приходит в км/ч, а расстояние в метрах
 # TODO: ФУНКЦИЯ ЕЩЁ НЕ ДОДЕЛАНА, ПОКА НЕ РАБОТАЕТ
 def modulateRoute(G: nx.Graph, route_tuple: Tuple[int, List],
-                  vehicle_speed: int, start_time: str):
+                  vehicle_speed: float, start_time: dt.datetime):
     (complete_length, route) = route_tuple
     print(route)
+    print(G.edges[route[0], route[1]]['weight'])
+    vehicle_speed *= 1000.0 # км/ч перевели в м/ч
+    vehicle_speed /= 60.0 # м/ч перевели в м/мин
+    for i in range(len(route) - 1):
+        minutes = G[route[i]][route[i+1]]["weight"] / vehicle_speed
+        print(route[i], " -- ", route[i + 1], ": ", G[route[i]][route[i+1]], 
+             "minutes:", minutes)
+        print("time before: ", start_time)
+        start_time += dt.timedelta(minutes = minutes)
+        print("time after: ", start_time)
+
 
 G = nx.Graph()  # создаём объект графа
 
@@ -51,4 +63,5 @@ G.add_weighted_edges_from(edges)
 # plt.show()
 
 route = createRoute(G)
-modulateRoute(G, route, 60, "10:00")
+start_time = dt.datetime(2023, 1, 11, hour = 10)
+modulateRoute(G, route, 60, start_time)
