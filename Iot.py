@@ -3,28 +3,26 @@ import networkx as nx
 import random as rnd
 import datetime as dt
 
-from typing import Tuple, List
+from typing import List
 
 # возвращает (длина_пути, [cписок вершин пути])
 # TODO: пока псевдорандом, поменять на рандом
 # TODO: не обрабатывает, если пути нет
-def createRoute(G: nx.Graph) -> Tuple[int, List]:
+def createRoute(G: nx.Graph) -> List:
     route_nodes = rnd.choices(list(G), k = 2)
     # алгоритм Дейкстры для взвешенного графа
-    return nx.single_source_dijkstra(G, source= route_nodes[0], target = route_nodes[1])
+    return nx.dijkstra_path(G, source = route_nodes[0], target = route_nodes[1])
 
 
 # получает граф, путь, сведения о машине (пока только скорость), время начала пути
-# TODO: возможно общая длина пути не нужна
 # TODO: сведения о машине должны приходить в виде объекта
 # TODO: сменить постоянную скорость на рандомную в диапазоне доступных для машины
+# TODO: добавить остановки в каждом пункте
 # TODO: скорость приходит в км/ч, а расстояние в метрах
 # TODO: ФУНКЦИЯ ЕЩЁ НЕ ДОДЕЛАНА, ПОКА НЕ РАБОТАЕТ
-def modulateRoute(G: nx.Graph, route_tuple: Tuple[int, List],
+def modulateRoute(G: nx.Graph, route: List,
                   vehicle_speed: float, start_time: dt.datetime):
-    (complete_length, route) = route_tuple
     print(route)
-    print(G.edges[route[0], route[1]]['weight'])
     vehicle_speed *= 1000.0 # км/ч перевели в м/ч
     vehicle_speed /= 60.0 # м/ч перевели в м/мин
     for i in range(len(route) - 1):
@@ -64,4 +62,4 @@ G.add_weighted_edges_from(edges)
 
 route = createRoute(G)
 start_time = dt.datetime(2023, 1, 11, hour = 10)
-modulateRoute(G, route, 60, start_time)
+modulateRoute(G, route, 20, start_time)
