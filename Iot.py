@@ -23,7 +23,6 @@ def create_route(G: nx.Graph) -> List:
 # TODO: скорость приходит в км/ч, а расстояние в метрах
 def traverse_route(G: nx.Graph, route: List,
                   vehicle_speed: float, start_time: dt.datetime) -> List[Dict]:
-    print(route)
     vehicle_speed *= 1000.0 # км/ч перевели в м/ч
     vehicle_speed /= 60.0 # м/ч перевели в м/мин
     route_edges: List[Dict] = []
@@ -36,6 +35,7 @@ def traverse_route(G: nx.Graph, route: List,
             "end_time": start_time + dt.timedelta(minutes = minutes), # время прибытия 
             "speed": vehicle_speed      # скорость машины (постоянная)
         }
+        start_time += dt.timedelta(minutes = minutes)
         route_edges.append(edge)
     return route_edges
 
@@ -69,5 +69,9 @@ G.add_weighted_edges_from(edges)
 # plt.show()
 
 route = create_route(G)
-start_time = dt.datetime(2023, 1, 11, hour = 10)
-route_info = traverse_route(G, route, 20, start_time)
+start_time_init = dt.datetime(2023, 1, 11, hour = 10)
+route_info = traverse_route(G, route, 20, start_time_init)
+
+print(route)
+for e in route_info:
+    print("Выехали из %(start)s в %(start_time)s. Ехали со скоростью: %(speed).2f м/мин. Прибыли в %(end)s в %(end_time)s." % e)
