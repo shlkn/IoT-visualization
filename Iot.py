@@ -5,22 +5,23 @@ import datetime as dt
 
 from typing import List, Dict
 
-# возвращает (длина_пути, [cписок вершин пути])
+# возвращает (cписок вершин пути)
 # TODO: пока псевдорандом, поменять на рандом
 # TODO: не обрабатывает, если пути нет
-def createRoute(G: nx.Graph) -> List:
+# TODO: добавить начало пути из некоторой вершины, в которой сейчас машина
+def create_route(G: nx.Graph) -> List:
     route_nodes = rnd.choices(list(G), k = 2)
     # алгоритм Дейкстры для взвешенного графа
     return nx.dijkstra_path(G, source = route_nodes[0], target = route_nodes[1])
 
 
 # получает граф, путь, сведения о машине (пока только скорость), время начала пути
+# возвращает список словарей с информацией об отрезках пути
 # TODO: сведения о машине должны приходить в виде объекта
 # TODO: сменить постоянную скорость на рандомную в диапазоне доступных для машины
 # TODO: добавить остановки в каждом пункте
 # TODO: скорость приходит в км/ч, а расстояние в метрах
-# TODO: ФУНКЦИЯ ЕЩЁ НЕ ДОДЕЛАНА, ПОКА НЕ РАБОТАЕТ
-def modulateRoute(G: nx.Graph, route: List,
+def traverse_route(G: nx.Graph, route: List,
                   vehicle_speed: float, start_time: dt.datetime) -> List[Dict]:
     print(route)
     vehicle_speed *= 1000.0 # км/ч перевели в м/ч
@@ -28,8 +29,6 @@ def modulateRoute(G: nx.Graph, route: List,
     route_edges: List[Dict] = []
     for i in range(len(route) - 1):
         minutes = G[route[i]][route[i+1]]["weight"] / vehicle_speed
-        # print(route[i], " -- ", route[i + 1], ": ", G[route[i]][route[i+1]], 
-        #     "minutes:", minutes)
         edge = {
             "start": route[i],          # начальный пункт
             "end": route[i + 1],        # конечный пункт
@@ -69,6 +68,6 @@ G.add_weighted_edges_from(edges)
 # nx.draw(G, with_labels=True, font_weight='bold')
 # plt.show()
 
-route = createRoute(G)
+route = create_route(G)
 start_time = dt.datetime(2023, 1, 11, hour = 10)
-print(modulateRoute(G, route, 20, start_time))
+route_info = traverse_route(G, route, 20, start_time)
