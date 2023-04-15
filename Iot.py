@@ -3,7 +3,7 @@ import networkx as nx
 import random as rnd
 import datetime as dt
 
-from typing import List
+from typing import List, Dict
 
 # возвращает (длина_пути, [cписок вершин пути])
 # TODO: пока псевдорандом, поменять на рандом
@@ -21,22 +21,31 @@ def createRoute(G: nx.Graph) -> List:
 # TODO: скорость приходит в км/ч, а расстояние в метрах
 # TODO: ФУНКЦИЯ ЕЩЁ НЕ ДОДЕЛАНА, ПОКА НЕ РАБОТАЕТ
 def modulateRoute(G: nx.Graph, route: List,
-                  vehicle_speed: float, start_time: dt.datetime):
+                  vehicle_speed: float, start_time: dt.datetime) -> List[Dict]:
     print(route)
     vehicle_speed *= 1000.0 # км/ч перевели в м/ч
     vehicle_speed /= 60.0 # м/ч перевели в м/мин
+    route_edges: List[Dict] = []
     for i in range(len(route) - 1):
         minutes = G[route[i]][route[i+1]]["weight"] / vehicle_speed
-        print(route[i], " -- ", route[i + 1], ": ", G[route[i]][route[i+1]], 
-             "minutes:", minutes)
-        print("time before: ", start_time)
-        start_time += dt.timedelta(minutes = minutes)
-        print("time after: ", start_time)
+        # print(route[i], " -- ", route[i + 1], ": ", G[route[i]][route[i+1]], 
+        #     "minutes:", minutes)
+        edge = {
+            "start": route[i],          # начальный пункт
+            "end": route[i + 1],        # конечный пункт
+            "start_time": start_time,   # время выезда
+            "end_time": start_time + dt.timedelta(minutes = minutes), # время прибытия 
+            "speed": vehicle_speed      # скорость машины (постоянная)
+        }
+        route_edges.append(edge)
+    return route_edges
 
-
+# TODO: переделать в направленный граф и/или мультиграф
 G = nx.Graph()  # создаём объект графа
 
 # определяем список узлов (ID узлов)
+# TODO: почему не циклом?
+# TODO: если есть остановки в узлах, указать их мин и макс длительность как свойства улзов
 nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
 
 # определяем список рёбер
@@ -62,4 +71,4 @@ G.add_weighted_edges_from(edges)
 
 route = createRoute(G)
 start_time = dt.datetime(2023, 1, 11, hour = 10)
-modulateRoute(G, route, 20, start_time)
+print(modulateRoute(G, route, 20, start_time))
