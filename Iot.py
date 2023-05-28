@@ -4,24 +4,31 @@ import random as rnd
 import datetime as dt
 import json as js
 import socket
-
+import time
+import paho.mqtt.client as mqtt 
 from typing import List, Dict
 
 # возвращает (cписок вершин пути)
 # TODO: пока псевдорандом, поменять на рандом
 # TODO: не обрабатывает, если пути нет
-# TODO: добавить начало пути из некоторой вершины, в которой сейчас машина
-def create_route(G: nx.Graph) -> List:
-    route_nodes = rnd.choices(list(G), k = 2)
+def create_route(G: nx.Graph, start_index: int) -> List:
+    while True:
+        end_node = rnd.choices(list(G), k = 1)
+        if start_index != end_node[0]:
+            break
     # алгоритм Дейкстры для взвешенного графа
-    return nx.dijkstra_path(G, source = route_nodes[0], target = route_nodes[1])
+    return nx.dijkstra_path(G, source = start_index, target = end_node[0])
 
 # возвращает (список из 10 грузовиков, случайно выбираемых из списка json-ов)
 def create_trucks(T: List) -> List:
     trucks_json: List = []
     for i in range (1,11):
-        j = rnd.randrange(0, 4)
-        trucks_json.append(js.loads(T[j]))
+        car = js.loads(T[rnd.randrange(0, 4)])
+        #TODO: число вершин убрать номером, сделать переменной
+        car["current_place"] = rnd.randint(1, 25)
+        #TODO: начальное время должно задаваться
+        car["current_time"] = dt.datetime(2023, 5, 22, hour = 12, minute=0)
+        trucks_json.append(car)
     return trucks_json
 
 # получает граф, путь, сведения о машине (пока только скорость), время начала пути
@@ -33,17 +40,23 @@ def create_trucks(T: List) -> List:
 
 def traverse_route(G: nx.Graph, route: List,
                   vehicle_speed: float, start_time: dt.datetime) -> List[Dict]:
-    vehicle_speed_m_min = vehicle_speed * 1000.0 # км/ч перевели в м/ч
-    vehicle_speed_m_min /= 60.0 # м/ч перевели в м/мин
+    #TODO: speed limit = 80
+    if vehicle_speed > 80:
+        vehicle_speed = 50
     route_edges: List[Dict] = []
     for i in range(len(route) - 1):
-        minutes = G[route[i]][route[i+1]]["weight"] / vehicle_speed_m_min
+        vehicle_speed_rnd = rnd.uniform(vehicle_speed - 30, vehicle_speed + 30)
+        vehicle_speed_m_min = vehicle_speed_rnd * 1000.0 # км/ч перевели в м/ч
+        vehicle_speed_m_min /= 60.0 # м/ч перевели в м/мин
+        
+        #TODO: debug *100
+        minutes = G[route[i]][route[i+1]]["weight"] * 100 / vehicle_speed_m_min
         edge = {
             "start": route[i],          # начальный пункт
             "end": route[i + 1],        # конечный пункт
             "start_time": start_time,   # время выезда
             "end_time": start_time + dt.timedelta(minutes = minutes), # время прибытия 
-            "speed": vehicle_speed      # скорость машины (постоянная)
+            "speed": vehicle_speed_rnd      # скорость машины (постоянная)
         }
         start_time += dt.timedelta(minutes = minutes)
         route_edges.append(edge)
@@ -96,9 +109,8 @@ MAZ_6312C9 = """{ "truck_type": "MAZ 6312C9",
 "racing_to_60_kmh_seconds": 55, "braking_60kmh_meters": 48.45,
 "fuel_volume": 500, "fuel_usage": 25.5, "capacity": 14250}"""
 
-# создаем список, содержащий json каждого ипа грузовиков
+# создаем список, содержащий json каждого типа грузовиков
 trucks_json = [KAMAZ_4308_69, KAMAZ_65117_48, GAZEL_NEXT, MAZ_6312C9]
-
 
 def create_routes_dict(truck_list: List) -> Dict:
     routes_dict = {}
@@ -106,18 +118,22 @@ def create_routes_dict(truck_list: List) -> Dict:
     for t in truck_list:
         car_dict = {}
         car_dict['car'] = t
-        route = create_route(G)
-        start_time_init = dt.datetime(2023, 5, 1, hour = 12, minute=0)
-        route_info = traverse_route(G, route, t["max_speed_kmh"], start_time_init)
-        car_dict['route_info'] = route_info
+        #TODO: сделать пути больше
+        #TODO: убрать магический номер маршрутов
+        for i in range(0, 10):
+            route = create_route(G, car_dict['car']['current_place'])
+            start_time_init = car_dict['car']['current_time']
+            route_info = traverse_route(G, route, t["max_speed_kmh"], start_time_init)
+            if 'route_info' in car_dict:
+                car_dict['route_info'] = car_dict['route_info'] + route_info
+            else:
+                car_dict['route_info'] = route_info
+            car_dict['car']['current_place'] = route[-1]
+            car_dict['car']['current_time'] = route_info[-1]["end_time"]
+        
         routes_dict[index] = car_dict
         index += 1
-    # print(routes_dict)
     return routes_dict
-        # print("Грузовик модели %(truck_type)s отправился по маршруту:"% t)
-
-        # for e in route_info:
-        #     print("Выехали из %(start)s в %(start_time)s. Ехали со скоростью: %(speed).2f м/мин. Прибыли в %(end)s в %(end_time)s." % e)
 
 # Для красивой печати и проверки данных
 def create_routes_json(routes_dict: Dict):
@@ -134,42 +150,62 @@ print(create_routes_json(routes_dict))
 
 
 # mqtt
+def on_connect(client, userdata, flags, return_code):
+    if return_code == 0:
+        print("connected")
+    else:
+        print("could not connect, return code:", return_code)
+
+client = mqtt.Client("Client1")
+client.on_connect=on_connect
+broker_hostname = "localhost"
+port = 1883 
+car_speed_topic = "test/car_speed/"
+car_places_topic = "test/car_places/"
+
+client.connect(broker_hostname, port)
+client.loop_start()
+
 
 def publish_to_telegraf(routes_dict: Dict):
     for route in routes_dict:
         car_id = route
         car_route = routes_dict[route]['route_info']
-        # TODO: добавить разные скорости
         print(car_id)
         
         for edge in car_route:
-            start_place = edge['start']
-            start_time = edge['start_time']
-            start_speed = edge['speed']
+            # start_place = edge['start']
+            # start_time = edge['start_time']
+            # start_speed = edge['speed']
             end_place = edge['end']
             end_time = edge['end_time']
             end_speed = edge['speed']
-            # print(start_time, start_speed, end_time, end_speed)
-            try:
-                sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-                payload = js.dumps({'car_id': car_id,
-                            #'time': start_time.strftime("%m/%d/%Y %H:%M:%S"),
-                            'car_speed': start_speed,
-                            'metric_name': 'car_speed'}).encode()
-                sock.sendto(payload, ('localhost', 8125))
-                print(payload)
+            #print(start_time, start_speed, end_time, end_speed)
 
-                payload = js.dumps({'car_id': car_id,
-                            #'time': end_time.strftime("%m/%d/%Y %H:%M:%S"),
-                            'car_speed': end_speed,
-                            'metric_name': 'car_speed'}).encode()
-                sock.sendto(payload,('localhost', 8125))
-                print(payload)
+            payload = js.dumps({
+                    'ts': end_time.timestamp(),
+                    'car_speed': end_speed,
+                    #'place': start_place,
+                    'metric_name': 'car_speed'}).encode()
 
-                # '05/05/2023 15:04:05' - MM/DD/YYYY
-                print('Sending sample data...')
-                sock.close()
-            except socket.error as e:
-                print(f'Got error: {e}')
+            result = client.publish(car_speed_topic + str(car_id), payload)
+            status = result[0]
+            if status == 0:
+                print("Message "+ str(payload) + " is published to topic " + car_speed_topic + str(car_id))
+            else:
+                print("Failed to send message to topic " + car_speed_topic + str(car_id))
+
+            #TODO: учесть самую первую вершину
+            payload = js.dumps({
+                    'ts': end_time.timestamp(),
+                    'place': end_place,
+                    'metric_name': 'car_places'}).encode()
+            result = client.publish(car_places_topic + str(car_id), payload)
+            status = result[0]
+            if status == 0:
+                print("Message "+ str(payload) + " is published to topic " + car_places_topic + str(car_id))
+            else:
+                print("Failed to send message to topic " + car_places_topic + str(car_id))
+
 
 publish_to_telegraf(routes_dict)
