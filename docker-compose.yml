@@ -1,0 +1,52 @@
+version: '3.6'
+services:
+  telegraf:
+    image: telegraf
+    volumes:
+      - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    depends_on:
+      - influxdb
+    links:
+      - influxdb
+    ports:
+    - '127.0.0.1:8125:8125/udp'
+
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb-compose
+    env_file: configuration.env
+    ports:
+      - '127.0.0.1:8086:8086'
+    volumes:
+      - ./:/imports
+      - influxdb_data:/home/influxdb
+
+  grafana:
+    image: grafana/grafana:latest
+    depends_on:
+      - influxdb
+    env_file: configuration.env
+    links:
+      - influxdb
+    ports:
+      - '127.0.0.1:3000:3000'
+    volumes:
+      - grafana_data:/data/grafana/
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+      - ./grafana/dashboards/:/etc/grafana/dashboards/
+
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: mosquitto
+    volumes:
+    - ./mosquitto:/mosquitto
+    - ./mosquitto/conf:/mosquitto/config
+    - ./mosquitto/data:/mosquitto/data
+    - ./mosquitto/log:/mosquitto/log
+    ports:
+    - '127.0.0.1:1883:1883'
+    - '127.0.0.1:9001:9001'
+
+volumes:
+  grafana_data: {}
+  influxdb_data: {}
