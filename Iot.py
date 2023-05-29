@@ -110,7 +110,7 @@ KAMAZ_65117_48 = """{ "truck_type": "KAMAZ 65117-48",
 GAZEL_NEXT = """{ "truck_type": "GAZEL NEXT",
 "power_output": 152, "max_speed_kmh": 130,
 "racing_to_60_kmh_seconds": 10.4,"braking_60kmh_meters": 32.5,
-"fuel_volume": 68, "fuel_usage": 8.5, "capacity": 1050}"""
+"fuel_volume": 95, "fuel_usage": 8.5, "capacity": 1050}"""
 MAZ_6312C9 = """{ "truck_type": "MAZ 6312C9",
 "power_output": 309, "max_speed_kmh": 85,
 "racing_to_60_kmh_seconds": 55, "braking_60kmh_meters": 48.45,
@@ -141,7 +141,7 @@ def create_routes_dict(truck_list: List) -> Dict:
                 car_dict['car']['current_fuel'] -= fuel_used
                 edge['current_fuel'] = car_dict['car']['current_fuel']
                 # заправка, если осталось меньше 20% топлива
-                if car_dict['car']['current_fuel'] <= car_dict['car']['fuel_volume'] * 0.2:
+                if car_dict['car']['current_fuel'] <= car_dict['car']['fuel_volume'] * 0.3:
                     car_dict['car']['refuel_times'] += 1
                     # находим пункт который следовали изначально (если ещё не приехали)
                     next_destination = 0
@@ -225,6 +225,7 @@ port = 1890
 car_speed_topic = "test/car_speed/"
 car_places_topic = "test/car_places/"
 fuel_used_topic = "test/fuel_used/"
+fuel_capacity_topic = "test/fuel_capacity/"
 
 client.connect(broker_hostname, port)
 client.loop_start()
@@ -244,6 +245,7 @@ def publish_to_telegraf(routes_dict: Dict):
             end_time = edge['end_time']
             end_speed = edge['speed']
             fuel_used = edge['fuel_used']
+            fuel_capacity = edge['current_fuel']
             #print(start_time, start_speed, end_time, end_speed)
 
             payload = js.dumps({
@@ -254,10 +256,10 @@ def publish_to_telegraf(routes_dict: Dict):
 
             result = client.publish(car_speed_topic + str(car_id), payload)
             status = result[0]
-            if status == 0:
-                print("Message "+ str(payload) + " is published to topic " + car_speed_topic + str(car_id))
-            else:
-                print("Failed to send message to topic " + car_speed_topic + str(car_id))
+            # if status == 0:
+            #     print("Message "+ str(payload) + " is published to topic " + car_speed_topic + str(car_id))
+            # else:
+            #     print("Failed to send message to topic " + car_speed_topic + str(car_id))
 
             #TODO: учесть самую первую вершину
             payload = js.dumps({
@@ -266,10 +268,10 @@ def publish_to_telegraf(routes_dict: Dict):
                     'metric_name': 'car_places'}).encode()
             result = client.publish(car_places_topic + str(car_id), payload)
             status = result[0]
-            if status == 0:
-                print("Message "+ str(payload) + " is published to topic " + car_places_topic + str(car_id))
-            else:
-                print("Failed to send message to topic " + car_places_topic + str(car_id))
+            # if status == 0:
+            #     print("Message "+ str(payload) + " is published to topic " + car_places_topic + str(car_id))
+            # else:
+            #     print("Failed to send message to topic " + car_places_topic + str(car_id))
                 
             payload = js.dumps({
                     'ts': end_time.timestamp(),
@@ -277,10 +279,21 @@ def publish_to_telegraf(routes_dict: Dict):
                     'metric_name': 'fuel_used'}).encode()
             result = client.publish(fuel_used_topic + str(car_id), payload)
             status = result[0]
-            if status == 0:
-                print("Message "+ str(payload) + " is published to topic " + fuel_used_topic + str(car_id))
-            else:
-                print("Failed to send message to topic " + fuel_used_topic + str(car_id))
+            # if status == 0:
+            #     print("Message "+ str(payload) + " is published to topic " + fuel_used_topic + str(car_id))
+            # else:
+            #     print("Failed to send message to topic " + fuel_used_topic + str(car_id))
+                
+            payload = js.dumps({
+                    'ts': end_time.timestamp(),
+                    'fuel_capacity': fuel_capacity,
+                    'metric_name': 'fuel_capacity'}).encode()
+            result = client.publish(fuel_capacity_topic + str(car_id), payload)
+            status = result[0]
+            # if status == 0:
+            #     print("Message "+ str(payload) + " is published to topic " + fuel_capacity_topic + str(car_id))
+            # else:
+            #     print("Failed to send message to topic " + fuel_capacity_topic + str(car_id))
 
 
 publish_to_telegraf(routes_dict)
