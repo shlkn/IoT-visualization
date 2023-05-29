@@ -11,13 +11,15 @@ from typing import List, Dict
 # возвращает (cписок вершин пути)
 # TODO: пока псевдорандом, поменять на рандом
 # TODO: не обрабатывает, если пути нет
-def create_route(G: nx.Graph, start_index: int) -> List:
-    while True:
-        end_node = rnd.choices(list(G), k = 1)
-        if start_index != end_node[0]:
-            break
+def create_route(G: nx.Graph, start_index: int, end_index = 0) -> List:
+    if end_index == 0:
+        while True:
+            end_node = rnd.choices(list(G), k = 1)
+            if start_index != end_node[0]:
+                end_index = end_node[0]
+                break
     # алгоритм Дейкстры для взвешенного графа
-    return nx.dijkstra_path(G, source = start_index, target = end_node[0])
+    return nx.dijkstra_path(G, source = start_index, target = end_index)
 
 # возвращает (список из 10 грузовиков, случайно выбираемых из списка json-ов)
 def create_trucks(T: List) -> List:
@@ -28,6 +30,9 @@ def create_trucks(T: List) -> List:
         car["current_place"] = rnd.randint(1, 25)
         #TODO: начальное время должно задаваться
         car["current_time"] = dt.datetime(2023, 5, 22, hour = 12, minute=0)
+        # начинает с полным баком
+        car["current_fuel"] = car["fuel_volume"]
+        car["refuel_times"] = 0
         trucks_json.append(car)
     return trucks_json
 
@@ -50,13 +55,15 @@ def traverse_route(G: nx.Graph, route: List,
         vehicle_speed_m_min /= 60.0 # м/ч перевели в м/мин
         
         #TODO: debug *100
-        minutes = G[route[i]][route[i+1]]["weight"] * 100 / vehicle_speed_m_min
+        distance = G[route[i]][route[i+1]]["weight"] * 100
+        minutes = distance / vehicle_speed_m_min
         edge = {
             "start": route[i],          # начальный пункт
             "end": route[i + 1],        # конечный пункт
             "start_time": start_time,   # время выезда
             "end_time": start_time + dt.timedelta(minutes = minutes), # время прибытия 
-            "speed": vehicle_speed_rnd      # скорость машины (постоянная)
+            "speed": vehicle_speed_rnd, # скорость машины (постоянная)
+            "distance": distance, # пройденное расстояние
         }
         start_time += dt.timedelta(minutes = minutes)
         route_edges.append(edge)
@@ -124,6 +131,62 @@ def create_routes_dict(truck_list: List) -> Dict:
             route = create_route(G, car_dict['car']['current_place'])
             start_time_init = car_dict['car']['current_time']
             route_info = traverse_route(G, route, t["max_speed_kmh"], start_time_init)
+
+            for edge in route_info:
+                # потребление топлива на 100 км при скорости 60 км/ч, дистанция в метрах
+                # TODO: вынести в функцию, ниже повторяется дважды
+                fuel_used = (edge['distance'] / 100000.0) *\
+                    (car_dict['car']['fuel_usage'] / 60.0 * edge['speed'])
+                edge['fuel_used'] = fuel_used
+                car_dict['car']['current_fuel'] -= fuel_used
+                edge['current_fuel'] = car_dict['car']['current_fuel']
+                # заправка, если осталось меньше 20% топлива
+                if car_dict['car']['current_fuel'] <= car_dict['car']['fuel_volume'] * 0.2:
+                    car_dict['car']['refuel_times'] += 1
+                    # находим пункт который следовали изначально (если ещё не приехали)
+                    next_destination = 0
+                    if edge['end'] != route[-1]:
+                        next_destination = route[-1]
+
+                    # заправка в пункте 18
+                    refuel_route = create_route(G, edge['end'], 18)
+                    refuel_start_time = edge['end_time']
+                    refuel_route_info = traverse_route(G, refuel_route, t["max_speed_kmh"], refuel_start_time)
+                    
+                    # потребление топлива на пути к заправке
+                    for e in refuel_route_info:
+                        fuel_used = (e['distance'] / 100000.0) *\
+                            (car_dict['car']['fuel_usage'] / 60.0 * e['speed'])
+                        e['fuel_used'] = fuel_used
+                        car_dict['car']['current_fuel'] -= fuel_used
+                        e['current_fuel'] = car_dict['car']['current_fuel']
+
+                    # заправили полный бак
+                    car_dict['car']['current_fuel'] = car_dict['car']['fuel_volume']
+                    # если некуда ехать после заправки
+                    if next_destination == 0:
+                        route_info += refuel_route_info
+                        break
+                    else:
+                        # отбросить все отрезки пути после отъезда на заправку
+                        edge_index = route_info.index(edge)
+                        route_info = route_info[0:edge_index+1]
+                        # добавить пройденный маршрут
+                        route_info += refuel_route_info
+                        # построить маршрут к назначению, прерванному заправкой
+                        back_route = create_route(G, route_info[-1]['end'], next_destination)
+                        back_start_time = route_info[-1]['end_time']
+                        back_route_info = traverse_route(G, back_route, t["max_speed_kmh"], back_start_time)
+                        for e in back_route_info:
+                            fuel_used = (e['distance'] / 100000.0) *\
+                                (car_dict['car']['fuel_usage'] / 60.0 * e['speed'])
+                            e['fuel_used'] = fuel_used
+                            car_dict['car']['current_fuel'] -= fuel_used
+                            e['current_fuel'] = car_dict['car']['current_fuel']
+
+                        route_info += back_route_info
+                        break
+
             if 'route_info' in car_dict:
                 car_dict['route_info'] = car_dict['route_info'] + route_info
             else:
@@ -148,7 +211,6 @@ print(create_routes_json(routes_dict))
 
 
 
-
 # mqtt
 def on_connect(client, userdata, flags, return_code):
     if return_code == 0:
@@ -162,6 +224,7 @@ broker_hostname = "localhost"
 port = 1890 
 car_speed_topic = "test/car_speed/"
 car_places_topic = "test/car_places/"
+fuel_used_topic = "test/fuel_used/"
 
 client.connect(broker_hostname, port)
 client.loop_start()
@@ -180,6 +243,7 @@ def publish_to_telegraf(routes_dict: Dict):
             end_place = edge['end']
             end_time = edge['end_time']
             end_speed = edge['speed']
+            fuel_used = edge['fuel_used']
             #print(start_time, start_speed, end_time, end_speed)
 
             payload = js.dumps({
@@ -206,6 +270,17 @@ def publish_to_telegraf(routes_dict: Dict):
                 print("Message "+ str(payload) + " is published to topic " + car_places_topic + str(car_id))
             else:
                 print("Failed to send message to topic " + car_places_topic + str(car_id))
+                
+            payload = js.dumps({
+                    'ts': end_time.timestamp(),
+                    'fuel_used': fuel_used,
+                    'metric_name': 'fuel_used'}).encode()
+            result = client.publish(fuel_used_topic + str(car_id), payload)
+            status = result[0]
+            if status == 0:
+                print("Message "+ str(payload) + " is published to topic " + fuel_used_topic + str(car_id))
+            else:
+                print("Failed to send message to topic " + fuel_used_topic + str(car_id))
 
 
 publish_to_telegraf(routes_dict)

@@ -274,3 +274,84 @@
 1685353156: Client Telegraf-Consumer-a7Jcl disconnected.
 1685353156: mosquitto version 2.0.15 terminating
 1685353156: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1685353160: mosquitto version 2.0.15 starting
+1685353160: Config loaded from /mosquitto/config/mosquitto.conf.
+1685353160: Opening ipv4 listen socket on port 1890.
+1685353160: mosquitto version 2.0.15 running
+1685353160: New connection from 172.18.0.4:60106 on port 1890.
+1685353160: New client connected from 172.18.0.4:60106 as Telegraf-Consumer-m4M9H (p2, c1, k60).
+1685353160: New connection from 172.18.0.4:60120 on port 1890.
+1685353160: New client connected from 172.18.0.4:60120 as Telegraf-Consumer-8GZk4 (p2, c1, k60).
+1685353170: New connection from 172.18.0.1:54138 on port 1890.
+1685353170: New client connected from 172.18.0.1:54138 as Client1 (p2, c1, k60).
+1685353171: Client Client1 closed its connection.
+1685353223: Client Telegraf-Consumer-m4M9H disconnected.
+1685353223: Client Telegraf-Consumer-8GZk4 disconnected.
+1685353225: New connection from 172.18.0.4:46744 on port 1890.
+1685353225: New client connected from 172.18.0.4:46744 as Telegraf-Consumer-nHf4A (p2, c1, k60).
+1685353225: New connection from 172.18.0.4:46756 on port 1890.
+1685353225: New client connected from 172.18.0.4:46756 as Telegraf-Consumer-YOMcG (p2, c1, k60).
+1685353246: New connection from 172.18.0.1:56498 on port 1890.
+1685353246: New client connected from 172.18.0.1:56498 as Client1 (p2, c1, k60).
+1685353246: Client Client1 closed its connection.
+1685353715: New connection from 172.18.0.1:38888 on port 1890.
+1685353715: New client connected from 172.18.0.1:38888 as Client1 (p2, c1, k60).
+1685353716: Client Client1 closed its connection.
+1685353784: Client Telegraf-Consumer-nHf4A disconnected.
+1685353784: Client Telegraf-Consumer-YOMcG disconnected.
+1685353786: New connection from 172.18.0.4:48848 on port 1890.
+1685353786: New client connected from 172.18.0.4:48848 as Telegraf-Consumer-eydVe (p2, c1, k60).
+1685353786: New connection from 172.18.0.4:48852 on port 1890.
+1685353786: New client connected from 172.18.0.4:48852 as Telegraf-Consumer-dmqJz (p2, c1, k60).
+1685353802: New connection from 172.18.0.1:50662 on port 1890.
+1685353802: New client connected from 172.18.0.1:50662 as Client1 (p2, c1, k60).
+1685353803: Client Client1 closed its connection.
+1685353849: Client Telegraf-Consumer-eydVe disconnected.
+1685353849: Client Telegraf-Consumer-dmqJz disconnected.
+1685353851: New connection from 172.18.0.4:37964 on port 1890.
+1685353851: New client connected from 172.18.0.4:37964 as Telegraf-Consumer-Zu2MV (p2, c1, k60).
+1685353851: New connection from 172.18.0.4:37978 on port 1890.
+1685353851: New client connected from 172.18.0.4:37978 as Telegraf-Consumer-MaXXg (p2, c1, k60).
+1685353860: New connection from 172.18.0.1:41272 on port 1890.
+1685353860: New client connected from 172.18.0.1:41272 as Client1 (p2, c1, k60).
+1685353861: Client Client1 closed its connection.
+1685353911: Client Telegraf-Consumer-Zu2MV disconnected.
+1685353911: Client Telegraf-Consumer-MaXXg disconnected.
+1685353912: New connection from 172.18.0.4:49446 on port 1890.
+1685353912: New client connected from 172.18.0.4:49446 as Telegraf-Consumer-11K16 (p2, c1, k60).
+1685353912: New connection from 172.18.0.4:49460 on port 1890.
+1685353912: New client connected from 172.18.0.4:49460 as Telegraf-Consumer-SOJAm (p2, c1, k60).
+1685353923: New connection from 172.18.0.1:58052 on port 1890.
+1685353923: New client connected from 172.18.0.1:58052 as Client1 (p2, c1, k60).
+1685353924: Client Client1 closed its connection.
+1685353967: Client Telegraf-Consumer-11K16 disconnected.
+1685353967: Client Telegraf-Consumer-SOJAm disconnected.
+1685353968: New connection from 172.18.0.4:39108 on port 1890.
+1685353968: New client connected from 172.18.0.4:39108 as Telegraf-Consumer-ZHEko (p2, c1, k60).
+1685353968: New connection from 172.18.0.4:39116 on port 1890.
+1685353968: New client connected from 172.18.0.4:39116 as Telegraf-Consumer-KdzVo (p2, c1, k60).
+1685353978: New connection from 172.18.0.1:40338 on port 1890.
+1685353978: New client connected from 172.18.0.1:40338 as Client1 (p2, c1, k60).
+1685353979: Client Client1 closed its connection.
+1685353989: Client Telegraf-Consumer-ZHEko disconnected.
+1685353989: Client Telegraf-Consumer-KdzVo disconnected.
+1685353990: New connection from 172.18.0.4:45782 on port 1890.
+1685353990: New client connected from 172.18.0.4:45782 as Telegraf-Consumer-IdsT3 (p2, c1, k60).
+1685353990: New connection from 172.18.0.4:45784 on port 1890.
+1685353990: New client connected from 172.18.0.4:45784 as Telegraf-Consumer-3bGHb (p2, c1, k60).
+1685354001: New connection from 172.18.0.1:60948 on port 1890.
+1685354001: New client connected from 172.18.0.1:60948 as Client1 (p2, c1, k60).
+1685354002: Client Client1 closed its connection.
+1685354049: New connection from 172.18.0.1:47476 on port 1890.
+1685354049: New client connected from 172.18.0.1:47476 as Client1 (p2, c1, k60).
+1685354050: Client Client1 closed its connection.
+1685354171: Client Telegraf-Consumer-IdsT3 disconnected.
+1685354171: Client Telegraf-Consumer-3bGHb disconnected.
+1685354172: New connection from 172.18.0.4:50610 on port 1890.
+1685354172: New client connected from 172.18.0.4:50610 as Telegraf-Consumer-cugc9 (p2, c1, k60).
+1685354172: New connection from 172.18.0.4:50626 on port 1890.
+1685354172: New client connected from 172.18.0.4:50626 as Telegraf-Consumer-glcnW (p2, c1, k60).
+1685354181: New connection from 172.18.0.1:36496 on port 1890.
+1685354181: New client connected from 172.18.0.1:36496 as Client1 (p2, c1, k60).
+1685354182: Client Client1 closed its connection.
+1685354960: Saving in-memory database to /mosquitto/data//mosquitto.db.
