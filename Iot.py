@@ -159,7 +159,7 @@ def on_connect(client, userdata, flags, return_code):
 client = mqtt.Client("Client1")
 client.on_connect=on_connect
 broker_hostname = "localhost"
-port = 1883 
+port = 1890 
 car_speed_topic = "test/car_speed/"
 car_places_topic = "test/car_places/"
 
@@ -198,7 +198,7 @@ def publish_to_telegraf(routes_dict: Dict):
             #TODO: учесть самую первую вершину
             payload = js.dumps({
                     'ts': end_time.timestamp(),
-                    'place': end_place,
+                    'car_places': end_place,
                     'metric_name': 'car_places'}).encode()
             result = client.publish(car_places_topic + str(car_id), payload)
             status = result[0]

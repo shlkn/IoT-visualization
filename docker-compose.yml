@@ -44,7 +44,7 @@ services:
     - ./mosquitto/data:/mosquitto/data
     - ./mosquitto/log:/mosquitto/log
     ports:
-    - '127.0.0.1:1883:1883'
+    - '127.0.0.1:1890:1890'
     - '127.0.0.1:9001:9001'
 
 volumes:
