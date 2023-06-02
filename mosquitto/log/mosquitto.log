@@ -373,3 +373,120 @@
 1685356711: New client connected from 172.18.0.1:51476 as Client1 (p2, c1, k60).
 1685356712: Client Client1 closed its connection.
 1685356761: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1685356908: New connection from 172.18.0.1:54810 on port 1890.
+1685356908: New client connected from 172.18.0.1:54810 as Client1 (p2, c1, k60).
+1685356908: Client Client1 closed its connection.
+1685357811: Client Telegraf-Consumer-303Jz disconnected.
+1685357811: Client Telegraf-Consumer-6azU9 disconnected.
+1685357811: Client Telegraf-Consumer-AW7zK disconnected.
+1685357812: New connection from 172.18.0.4:33738 on port 1890.
+1685357812: New client connected from 172.18.0.4:33738 as Telegraf-Consumer-VArHZ (p2, c1, k60).
+1685357812: New connection from 172.18.0.4:33752 on port 1890.
+1685357812: New client connected from 172.18.0.4:33752 as Telegraf-Consumer-1Zlms (p2, c1, k60).
+1685357812: New connection from 172.18.0.4:33764 on port 1890.
+1685357812: New client connected from 172.18.0.4:33764 as Telegraf-Consumer-2zkby (p2, c1, k60).
+1685357812: New connection from 172.18.0.4:33772 on port 1890.
+1685357812: New client connected from 172.18.0.4:33772 as Telegraf-Consumer-M0zd7 (p2, c1, k60).
+1685357823: New connection from 172.18.0.1:39994 on port 1890.
+1685357823: New client connected from 172.18.0.1:39994 as Client1 (p2, c1, k60).
+1685357825: Client Client1 closed its connection.
+1685357994: New connection from 172.18.0.1:48796 on port 1890.
+1685357994: New client connected from 172.18.0.1:48796 as Client1 (p2, c1, k60).
+1685357995: Client Client1 closed its connection.
+1685358107: New connection from 172.18.0.1:43484 on port 1890.
+1685358107: New client connected from 172.18.0.1:43484 as Client1 (p2, c1, k60).
+1685358107: Client Client1 closed its connection.
+1685358221: New connection from 172.18.0.1:42140 on port 1890.
+1685358221: New client connected from 172.18.0.1:42140 as Client1 (p2, c1, k60).
+1685358222: Client Client1 closed its connection.
+1685358562: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1685360363: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1685362164: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1685363965: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1685365766: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1685367567: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1685369368: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1685371097: Client Telegraf-Consumer-VArHZ disconnected.
+1685371097: Client Telegraf-Consumer-1Zlms disconnected.
+1685371097: Client Telegraf-Consumer-2zkby disconnected.
+1685371097: Client Telegraf-Consumer-M0zd7 disconnected.
+1685371100: mosquitto version 2.0.15 terminating
+1685371100: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1685623158: mosquitto version 2.0.15 starting
+1685623158: Config loaded from /mosquitto/config/mosquitto.conf.
+1685623158: Opening ipv4 listen socket on port 1890.
+1685623158: mosquitto version 2.0.15 running
+1685623173: mosquitto version 2.0.15 terminating
+1685623173: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1685623505: mosquitto version 2.0.15 starting
+1685623505: Config loaded from /mosquitto/config/mosquitto.conf.
+1685623505: Opening ipv4 listen socket on port 1890.
+1685623505: mosquitto version 2.0.15 running
+1685623507: New connection from 172.18.0.4:56606 on port 1890.
+1685623507: New client connected from 172.18.0.4:56606 as Telegraf-Consumer-xY7eY (p2, c1, k60).
+1685623507: New connection from 172.18.0.4:56612 on port 1890.
+1685623507: New client connected from 172.18.0.4:56612 as Telegraf-Consumer-E3wCr (p2, c1, k60).
+1685623507: New connection from 172.18.0.4:56616 on port 1890.
+1685623507: New client connected from 172.18.0.4:56616 as Telegraf-Consumer-EfiLN (p2, c1, k60).
+1685623507: New connection from 172.18.0.4:56624 on port 1890.
+1685623507: New client connected from 172.18.0.4:56624 as Telegraf-Consumer-PLuT6 (p2, c1, k60).
+1685623595: mosquitto version 2.0.15 terminating
+1685623595: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1685623600: mosquitto version 2.0.15 starting
+1685623600: Config loaded from /mosquitto/config/mosquitto.conf.
+1685623600: Opening ipv4 listen socket on port 1890.
+1685623600: mosquitto version 2.0.15 running
+1685623601: New connection from 172.18.0.4:40922 on port 1890.
+1685623601: New client connected from 172.18.0.4:40922 as Telegraf-Consumer-KzWfR (p2, c1, k60).
+1685623601: New connection from 172.18.0.4:40936 on port 1890.
+1685623601: New client connected from 172.18.0.4:40936 as Telegraf-Consumer-2z5yI (p2, c1, k60).
+1685623601: New connection from 172.18.0.4:40952 on port 1890.
+1685623601: New client connected from 172.18.0.4:40952 as Telegraf-Consumer-zHwxy (p2, c1, k60).
+1685623601: New connection from 172.18.0.4:40960 on port 1890.
+1685623601: New client connected from 172.18.0.4:40960 as Telegraf-Consumer-HuZYl (p2, c1, k60).
+1685624006: mosquitto version 2.0.15 terminating
+1685624006: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1685624011: mosquitto version 2.0.15 starting
+1685624011: Config loaded from /mosquitto/config/mosquitto.conf.
+1685624011: Opening ipv4 listen socket on port 1890.
+1685624011: mosquitto version 2.0.15 running
+1685624011: New connection from 172.18.0.5:36310 on port 1890.
+1685624011: New client connected from 172.18.0.5:36310 as Telegraf-Consumer-mWon6 (p2, c1, k60).
+1685624011: New connection from 172.18.0.5:36322 on port 1890.
+1685624011: New client connected from 172.18.0.5:36322 as Telegraf-Consumer-86YYS (p2, c1, k60).
+1685624011: New connection from 172.18.0.5:36326 on port 1890.
+1685624011: New client connected from 172.18.0.5:36326 as Telegraf-Consumer-eW6BB (p2, c1, k60).
+1685624011: New connection from 172.18.0.5:36330 on port 1890.
+1685624011: New client connected from 172.18.0.5:36330 as Telegraf-Consumer-rTI92 (p2, c1, k60).
+1685624912: New connection from 172.18.0.1:43676 on port 1890.
+1685624912: New connection from 172.18.0.1:43688 on port 1890.
+1685624912: Client <unknown> disconnected due to malformed packet.
+1685624913: Client <unknown> disconnected due to malformed packet.
+1685624913: New connection from 172.18.0.1:43704 on port 1890.
+1685624913: Client <unknown> disconnected due to malformed packet.
+1685624914: New connection from 172.18.0.1:43722 on port 1890.
+1685624914: New connection from 172.18.0.1:43716 on port 1890.
+1685624914: Client <unknown> disconnected due to malformed packet.
+1685624914: Client <unknown> disconnected due to malformed packet.
+1685624914: New connection from 172.18.0.1:43736 on port 1890.
+1685624914: Client <unknown> disconnected due to malformed packet.
+1685625319: New connection from 172.18.0.1:39706 on port 1890.
+1685625319: New client connected from 172.18.0.1:39706 as Client1 (p2, c1, k60).
+1685625319: Client Client1 closed its connection.
+1685625654: New connection from 172.18.0.1:56044 on port 1890.
+1685625654: New client connected from 172.18.0.1:56044 as Client1 (p2, c1, k60).
+1685625655: Client Client1 closed its connection.
+1685625811: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1685627612: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1685629413: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1685631214: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1685633015: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1685634816: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1685636617: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1685638418: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1685639956: Client Telegraf-Consumer-mWon6 disconnected.
+1685639956: Client Telegraf-Consumer-86YYS disconnected.
+1685639956: Client Telegraf-Consumer-eW6BB disconnected.
+1685639956: Client Telegraf-Consumer-rTI92 disconnected.
+1685639956: mosquitto version 2.0.15 terminating
+1685639956: Saving in-memory database to /mosquitto/data//mosquitto.db.

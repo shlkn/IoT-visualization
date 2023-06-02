@@ -29,7 +29,7 @@ def create_trucks(T: List) -> List:
         #TODO: число вершин убрать номером, сделать переменной
         car["current_place"] = rnd.randint(1, 25)
         #TODO: начальное время должно задаваться
-        car["current_time"] = dt.datetime(2023, 5, 22, hour = 12, minute=0)
+        car["current_time"] = dt.datetime(2023, 5, 25, hour = 12, minute=0)
         # начинает с полным баком
         car["current_fuel"] = car["fuel_volume"]
         car["refuel_times"] = 0

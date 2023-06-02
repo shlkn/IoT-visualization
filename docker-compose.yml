@@ -21,19 +21,24 @@ services:
       - ./:/imports
       - influxdb_data:/home/influxdb
 
+  # grafana:
+  #   image: grafana/grafana:latest
+  #   depends_on:
+  #     - influxdb
+  #   env_file: configuration.env
+  #   links:
+  #     - influxdb
+  #   ports:
+  #     - '127.0.0.1:3000:3000'
+  #   volumes:
+  #     - grafana_data:/data/grafana/
+  #     - ./grafana/provisioning/:/etc/grafana/provisioning/
+  #     - ./grafana/dashboards/:/etc/grafana/dashboards/
   grafana:
-    image: grafana/grafana:latest
-    depends_on:
-      - influxdb
-    env_file: configuration.env
-    links:
-      - influxdb
+    image: shlkn/grafana_iot
+    container_name: grafana_iot
     ports:
       - '127.0.0.1:3000:3000'
-    volumes:
-      - grafana_data:/data/grafana/
-      - ./grafana/provisioning/:/etc/grafana/provisioning/
-      - ./grafana/dashboards/:/etc/grafana/dashboards/
 
   mosquitto:
     image: eclipse-mosquitto:latest
