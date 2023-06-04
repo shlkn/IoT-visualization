@@ -38,7 +38,7 @@ services:
     image: shlkn/grafana_iot
     container_name: grafana_iot
     ports:
-      - '127.0.0.1:3000:3000'
+      - '127.0.0.1:3001:3001'
 
   mosquitto:
     image: eclipse-mosquitto:latest
